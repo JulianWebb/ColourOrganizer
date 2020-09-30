@@ -3,7 +3,7 @@ var Colour = require('./classes/colour')
 
 function removeDuplicates(accumulator, current) {
     // If element with the same hex already exists in the accumulator, if it does then don't add it to the accumulator
-    if (accumulator.findIndex((element) => element.hex == current.hex)) return accumulator;
+    if (accumulator.findIndex(element => element.hex == current.hex) != -1) return accumulator;
     // Otherwise, add it to the accumulator
     accumulator.push(current);
     return accumulator;
