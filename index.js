@@ -1,16 +1,23 @@
-/*
- * ColourOrganizer
- * By: Pongles
- * Organizes a list of hex colour codes by RGB,
- * creating a "ramp" per colour where it is the highest of the three, 
- * and then sorting by the value of the other two.
- * 
- * I don't know if this will create anything usable, but let's see!
- */
-
 var JIMP = require('jimp');
 var Colour = require('./classes/colour')
 
+function removeDuplicates(accumulator, current) {
+    // If element with the same hex already exists in the accumulator, if it does then don't add it to the accumulator
+    if (accumulator.findIndex((element) => element.hex == current.hex)) return accumulator;
+    // Otherwise, add it to the accumulator
+    accumulator.push(current);
+    return accumulator;
+}
+
+function colourSort(a, b) {
+    // TODO: this
+}
+
+function listColours(colours) {
+    colours.forEach(color => {
+        console.log(`#${color.hex}`)
+    })
+}
 
 JIMP.read('./target/target.png', (err, image) => {
     if (err) return console.log(err);
@@ -27,7 +34,11 @@ JIMP.read('./target/target.png', (err, image) => {
     } catch (er) {
         console.error(er);
     }
-    colours.forEach(colour => {
-        console.log(colour.hex);
-    })
+
+    console.log("Initial Array:")
+    listColours(colours);
+    colours = colours.reduce(removeDuplicates, []);
+    
+    console.log("Reduced Array:")
+    listColours(colours);
 });
