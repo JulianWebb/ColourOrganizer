@@ -1,22 +1,22 @@
+var fs = require('fs');
 var JIMP = require('jimp');
 var Colour = require('./classes/colour')
 
 function removeDuplicates(accumulator, current) {
-    // If element with the same hex already exists in the accumulator, if it does then don't add it to the accumulator
     if (accumulator.some(element => element.hex == current.hex)) return accumulator;
-    // Otherwise, add it to the accumulator
     accumulator.push(current);
     return accumulator;
 }
 
-function colourSort(a, b) {
-    // TODO: this
+// accumulator starts out as [[], [], []]
+function seperateStrengths(accumulator, current) {
+    accumulator[current.highest].push(current)
+
+    return accumulator;
 }
 
-function listColours(colours) {
-    colours.forEach(color => {
-        console.log(`#${color.hex}`)
-    })
+function colourSort(a, b) {
+    return a.coloursInt[a.highest] > b.coloursInt[b.highest];
 }
 
 JIMP.read('./target/target.png', (err, image) => {
@@ -25,9 +25,9 @@ JIMP.read('./target/target.png', (err, image) => {
     try {
         image.scan(0, 0, image.bitmap.width, image.bitmap.height, (x, y, idx) => {
             let colour = new Colour(x, y, {
-                red: image.bitmap.data[idx].toString(16).padStart(2, '0'),
-                green: image.bitmap.data[idx + 1].toString(16).padStart(2, '0'),
-                blue: image.bitmap.data[idx + 2].toString(16).padStart(2, '0')
+                red: image.bitmap.data[idx],
+                green: image.bitmap.data[idx + 1],
+                blue: image.bitmap.data[idx + 2]
             })
             colours.push(colour)
         });
@@ -36,9 +36,28 @@ JIMP.read('./target/target.png', (err, image) => {
     }
 
     console.log("Initial Array:")
-    listColours(colours);
+    //listColours(colours);
     colours = colours.reduce(removeDuplicates, []);
     
-    console.log("Reduced Array:")
-    listColours(colours);
+    console.log("First Reduced Array:")
+    //listColours(colours);
+
+    colours = colours.reduce(seperateStrengths, [[], [], []]);
+    colours = colours.map(type => {
+        return type.sort(colourSort);
+    })
+
+    let newImage = new JIMP(Math.max(colours[0].length, colours[1].length, colours[2].length) + 1, 3, 0xFFFFFF00, (err, newImage) => {
+        colours.forEach((type, typeIndex, array) => {
+            type.forEach((colour, colourIndex, array) => {
+                newImage.setPixelColour(JIMP.rgbaToInt(colour.redInt, colour.greenInt, colour.blueInt, 255), colourIndex, typeIndex)
+            })
+        })
+
+        newImage.write('./result/result.png')
+        newImage.scale(32, JIMP.RESIZE_NEAREST_NEIGHBOR, (err, newImage) => {
+            newImage.write('./result/result32x.png')
+        })
+        
+    })
 });
