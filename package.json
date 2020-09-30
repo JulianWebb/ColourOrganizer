@@ -1,0 +1,26 @@
+{
+  "name": "colourorganizer",
+  "version": "0.1.0",
+  "description": "Creates a organized colour chart",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JulianWebb/ColourOrganizer.git"
+  },
+  "keywords": [
+    "colour",
+    "organizer"
+  ],
+  "author": "JulianWebb",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/JulianWebb/ColourOrganizer/issues"
+  },
+  "homepage": "https://github.com/JulianWebb/ColourOrganizer#readme",
+  "dependencies": {
+    "jimp": "^0.16.1"
+  }
+}
