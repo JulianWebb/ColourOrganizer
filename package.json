@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/JulianWebb/ColourOrganizer#readme",
   "dependencies": {
+    "color-model": "^0.2.2",
     "jimp": "^0.16.1"
   }
 }
